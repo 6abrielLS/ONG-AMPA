@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+from dotenv import load_dotenv
 from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,13 +20,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-dy!k1vuis6zep3zdy79o0%3!x7fg^8r^0*d^=3cn-w)-#^d-!u'
+SECRET_KEY = os.getenv('SECRET_KEY', 'chave-padrao-insegura-apenas-para-teste')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']  #ALLOWED_HOSTS = ['ongampa.com.br', 'www.ongampa.com.br', 'localhost', '127.0.0.1']
 
+load_dotenv()
 
 # Application definition
 
@@ -137,6 +138,9 @@ DEFAULT_FROM_EMAIL = 'site@ongampa.com.br'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Configurações do reCAPTCHA
+RECAPTCHA_PUBLIC_KEY = '6LeasywsAAAAANHoc9ej-ZQLYO3W5kp9HVd7OvFq'
+RECAPTCHA_PRIVATE_KEY = '6LeasywsAAAAAD0ptA3__1KxngfcG9bzCcWURf8O'
 
 # ==================================
 # CONFIGURAÇÕES DO JAZZMIN (ADMIN)
@@ -173,7 +177,7 @@ JAZZMIN_SETTINGS = {
     },
     
     "order_with_respect_to": ["OngAmp", "auth"],
-    "show_ui_builder": False, # Desativei pois já configuramos o tema
+    "show_ui_builder": True, # Desativei pois já configuramos o tema
 }
 
 JAZZMIN_UI_TWEAKS = {

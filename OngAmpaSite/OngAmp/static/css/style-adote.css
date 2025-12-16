@@ -21,61 +21,51 @@
 .grid-pets {
     display: grid;
     /* Cards responsivos: mínimo de 280px */
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 350px));
+    justify-content: center;
     gap: 2rem;
+    width: 100%;
 }
 
 /* Card do Pet */
 .card-pet {
     background: #fff;
     border-radius: 1rem;
-    overflow: hidden; /* Para a imagem não vazar as bordas */
+    overflow: hidden;
     box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     border: 1px solid #eee;
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 .card-pet:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
-
-/* Imagem */
+ /*Imagem card*/
 .pet-img-wrapper {
-    height: 250px;
     width: 100%;
+    height: 450px;
     position: relative;
-    background-color: #f0f0f0;
+    overflow: hidden; 
+    background-color: #f8f9fa; 
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
 }
-
 .pet-img-wrapper img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Corta a imagem para preencher o quadrado */
+    object-fit: cover; 
+    object-position: center top; 
+    
+    display: block; 
+    transition: transform 0.5s ease; 
 }
-
-/* Badge Sexo (Bolinha no canto) */
-.badge-sexo {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    width: 35px;
-    height: 35px;
-    background: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1.2rem;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+.card-pet:hover .pet-img-wrapper img {
+    transform: scale(1.1);
 }
-
-.badge-sexo.M { color: #2daae4; } /* Azul para Macho */
-.badge-sexo.F { color: #e91e63; } /* Rosa para Fêmea */
-
 /* Informações */
 .pet-info {
     padding: 1.5rem;
@@ -85,31 +75,9 @@
 }
 
 .pet-info h3 {
-    color: var(--primary);
-    margin-bottom: 0.2rem;
-    font-size: 1.4rem;
-}
-
-.pet-desc-curta {
-    color: #666;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-}
-
-.pet-tags {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-bottom: 1.5rem;
-}
-
-.pet-tags span {
-    background-color: #eee;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    color: #555;
-    font-weight: 600;
+    margin-bottom: 0.8rem;
+    font-size: 1.5rem;
+    color: #333;
 }
 
 .tag-castrado {
@@ -117,23 +85,106 @@
     color: #2e7d32 !important;
 }
 
-/* Botão */
-.btn-detalhes {
-    margin-top: auto; /* Empurra o botão para o fundo do card */
-    background-color: var(--primary);
+/* Container das Tags (Linha 1) */
+.tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.row-castrado {
+    margin-bottom: 1rem;
+}
+
+/* Estilo Base da Pílula (Tag) */
+.tag-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.1rem 0.5rem;
+    border-radius: 50px; /* Borda bem redonda */
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Variação: Outline (Borda cinza, fundo branco - Igual "Macho" e "Grande" da foto) */
+.tag-pill.outline {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    color: #666;
+}
+
+/* Variação: Success (Verde preenchido - Para "Castrado") */
+.tag-pill.success {
+    background-color: #27ae60; /* Verde bonito */
+    border: 1px solid #27ae60;
     color: #fff;
-    text-align: center;
+    gap: 5px; /* Espaço entre ícone e texto */
+}
+
+/* === Box de Status de Saúde === */
+.health-box {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 0.8rem;
     padding: 0.8rem;
-    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.health-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #888;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.health-tags {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.tag-health {
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+
+.tag-health.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+.btn-detalhes {
+    display: block;
+    width: 100%;
+    margin-top: auto;
+    padding: 0.6rem 0; 
+    text-align: center;
     text-decoration: none;
     font-weight: 700;
-    transition: background 0.2s;
+    font-size: 1rem;
+    border-radius: 1rem; 
+    background-color: #004aad;
+    color: #ffffff;
+    
+    /* Transição suave */
+    transition: all 0.3s ease;
 }
 
+/* ESTADO HOVER (Passar o mouse) */
 .btn-detalhes:hover {
-    background-color: #003580;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(45, 170, 228, 0.4);
 }
-
 .vazio { text-align: center; font-size: 1.2rem; color: #777; width: 100%; grid-column: 1 / -1; }
 
 /* ===== PÁGINA DE DETALHES DO PET ===== */
@@ -484,3 +535,9 @@
     background-color: var(--primary);
     color: #fff;
 }
+
+
+
+
+
+

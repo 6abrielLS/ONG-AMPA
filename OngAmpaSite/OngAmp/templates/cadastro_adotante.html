@@ -1,50 +1,117 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block extra_css %}
+{% extends 'base.html' %} {% load static %} {% block extra_css %}
 <style>
-    .form-container { max-width: 600px; margin: 4rem auto; padding: 2rem; background: #fff; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #eee; }
-    .form-header { text-align: center; margin-bottom: 2rem; }
-    .form-header h2 { color: var(--primary); font-size: 2rem; }
-    .campo-form { margin-bottom: 1.5rem; }
-    .campo-form label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #444; }
-    .form-control { width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 0.5rem; font-size: 1rem; }
-    .btn-submit { width: 100%; padding: 1rem; background-color: var(--primary); color: white; border: none; border-radius: 0.5rem; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: 0.2s; }
-    .btn-submit:hover { background-color: #003580; }
-    .pet-destaque { background: #f0f7ff; padding: 1rem; border-radius: 8px; margin: 1rem 0; text-align: center; color: var(--primary); border: 1px solid #cce5ff; }
+  .form-container {
+    max-width: 600px;
+    margin: 4rem auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid #eee;
+  }
+  .form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .form-header h2 {
+    color: var(--primary);
+    font-size: 2rem;
+  }
+  .campo-form {
+    margin-bottom: 1.5rem;
+  }
+  .campo-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #444;
+  }
+  .form-control {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+  }
+  .btn-submit {
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .btn-submit:hover {
+    background-color: #003580;
+  }
+  .pet-destaque {
+    background: #f0f7ff;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    text-align: center;
+    color: var(--primary);
+    border: 1px solid #cce5ff;
+  }
 </style>
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 <main class="com-padding-topo">
-    <div class="container">
-        <div class="form-container">
-            <div class="form-header">
-                <h2>Cadastro de Interesse</h2>
-                
-                {% if pet %}
-                    <div class="pet-destaque">
-                        Interesse em adotar: <strong>{{ pet.nome }}</strong> 🐾
-                    </div>
-                {% endif %}
-                
-                <p>Preencha seus dados para contato.</p>
-            </div>
+  <div class="container">
+    <div class="form-container">
+      <div class="form-header">
+        <h2>Cadastro de Interesse</h2>
 
-            <form method="post">
-                {% csrf_token %}
-                {% for field in form %}
-                <div class="campo-form">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {{ field }}
-                    {% if field.errors %}
-                        <small style="color: red;">{{ field.errors.0 }}</small>
-                    {% endif %}
-                </div>
-                {% endfor %}
-                <button type="submit" class="btn-submit">Enviar Cadastro</button>
-            </form>
+        {% if pet %}
+        <div class="pet-destaque">
+          Interesse em adotar: <strong>{{ pet.nome }}</strong> 🐾
         </div>
+        {% endif %}
+
+        <p>Preencha seus dados para contato.</p>
+      </div>
+      <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+      <form method="post">
+        {% csrf_token %} {% for field in form %}
+        <div class="campo-form">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }} {% if field.errors %}
+          <small style="color: red">{{ field.errors.0 }}</small>
+          {% endif %}
+        </div>
+        {% endfor %}
+
+        <div style="margin-bottom: 15px; margin-top: 10px">
+          <div
+            class="g-recaptcha"
+            data-sitekey="{{ recaptcha_site_key }}"
+          ></div>
+        </div>
+
+        {% if messages %}
+        <div style="margin-bottom: 15px">
+          {% for message in messages %}
+          <div
+            style="
+              color: red;
+              font-weight: bold;
+              padding: 10px;
+              border: 1px solid red;
+              border-radius: 5px;
+            "
+          >
+            {{ message }}
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <button type="submit" class="btn-submit">Enviar Cadastro</button>
+      </form>
     </div>
+  </div>
 </main>
 {% endblock %}

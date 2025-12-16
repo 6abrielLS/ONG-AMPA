@@ -9,7 +9,7 @@
   --btn-hover: #bdbdbd;
   
   /* Layout */
-  --header-height: 6.25rem; /* ~100px */
+  --header-height: 5rem; /* ~100px */
 }
 
 * {
@@ -20,20 +20,36 @@
 }
 
 html, body {
- background: #ffffff;
+  height: 100%;
+  background: #ffffff;
   color: var(--text);
+  
+  /* 1. AQUI APLICAMOS O ESPAÇO UMA ÚNICA VEZ */
+  /* Isso garante que nada fique escondido atrás do menu fixo */
+
+  
+  overflow-x: hidden; 
 }
 
+/* 2. ZERAMOS QUALQUER ESPAÇO DO MAIN PARA NÃO DUPLICAR */
 main {
- padding-top: var(--header-height);
-  min-height: 80vh;
+    padding-top: var(--header-height);
+  margin-top: 0 !important;
+  min-height: 80vh; 
+}
+
+/* Utilitário para páginas internas */
+.com-padding-topo {
+    /* Deixamos zerado ou com um respiro mínimo (ex: 20px) */
+    /* Se colocar var(--header-height) aqui de novo, o buraco volta! */
+    padding-top: 0 !important; 
 }
 
 /* =========================================
    CONTAINER GLOBAL
    ========================================= */
 .container {
-  max-width: 1400px; 
+  max-width: 85rem; 
   margin-left: auto;
   margin-right: auto;
   padding-left: 1rem;

@@ -70,7 +70,7 @@
 <section class="section-destaques">
   <div class="container">
     <header class="section-header-dark">
-      <h2>Eles precisam de você! </h2>
+      <h2>Eles precisam de você!</h2>
       <p>Conheça alguns dos nossos resgatados que aguardam uma família.</p>
     </header>
 
@@ -79,35 +79,58 @@
       {% for pet in pets_destaque %}
       <div class="card-pet">
         <div class="pet-img-wrapper">
-          {% with capa=pet.fotos.first %} {% if capa %}
-          <img src="{{ capa.imagem.url }}" alt="{{ pet.nome }}" />
-          {% else %}
-          <img src="{% static 'img/sem-foto.jpg' %}" alt="Sem foto" />
-          {% endif %} {% endwith %}
-
-          <span class="badge-sexo {{ pet.sexo }}">
-            {% if pet.sexo == 'M' %}♂{% else %}♀{% endif %}
-          </span>
-        </div>
+          {% with capa=pet.fotos.first %} 
+            {% if capa %}
+            <img src="{{ capa.imagem.url }}" alt="{{ pet.nome }}" />
+            {% else %}
+            <img src="{% static 'img/sem-foto.jpg' %}" alt="Sem foto" />
+            {% endif %} 
+          {% endwith %}
+          
+          </div>
 
         <div class="pet-info">
-          <h3>{{ pet.nome }}</h3>
-          <p class="pet-desc-curta">
-            {{ pet.get_idade_display }} • {{ pet.get_porte_display }}
-          </p>
-          <a href="{% url 'detalhes_pet' pet.id %}" class="btn-detalhes"
-            >Conhecer</a
-          >
+            <h3>{{ pet.nome }}</h3>
+
+            <div class="tags-row">
+                <span class="tag-pill outline">{{ pet.get_sexo_display }}</span>
+                <span class="tag-pill outline">{{ pet.get_porte_display }}</span>
+                <span class="tag-pill outline">{{ pet.raca }}</span>
+            </div>
+
+            {% if pet.is_castrado == 'C' %}
+            <div class="row-castrado">
+                <span class="tag-pill success">
+                    <i class="fas fa-check"></i> Castrado
+                </span>
+            </div>
+            {% endif %}
+
+            {% if pet.is_condicao_especial == 'S' %}
+            <div class="health-box">
+                <span class="health-label">Atenção à Saúde:</span>
+                <div class="health-tags">
+                    <span class="tag-health warning">
+                        <i class="fas fa-heartbeat"></i> Requer Cuidados
+                    </span>
+                </div>
+            </div>
+            {% endif %}
+
+            <a href="{% url 'detalhes_pet' pet.id %}" class="btn-detalhes">
+                Conhecer História <i class="fas fa-arrow-right"></i>
+            </a>
         </div>
       </div>
       {% endfor %}
     </div>
 
     <div class="btn-center-wrapper">
-      <a href="{% url 'lista_pets' %}" class="btn-outline-primary"
-        >Ver todos os animais &rarr;</a
-      >
+      <a href="{% url 'lista_pets' %}" class="btn-outline-primary">
+        Ver todos os animais &rarr;
+      </a>
     </div>
+
     {% else %}
     <p class="text-muted" style="text-align: center; padding: 2rem">
       Nenhum animal em destaque no momento.
@@ -136,7 +159,7 @@
           </p>
           <div class="pix-box">
             <small>Chave CNPJ:</small>
-            <strong>00.000.000/0001-00</strong>
+            <strong>01.522.642/0001-13</strong>
           </div>
         </div>
       </div>

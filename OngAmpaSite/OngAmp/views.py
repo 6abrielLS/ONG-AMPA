@@ -4,6 +4,9 @@ from .models import Pet
 from .forms import CadastroAdotanteForm
 from django.core.mail import send_mail
 from django.conf import settings
+import requests # Comunicação com o Google
+from django.contrib import messages # Manda mensagem de erro na tela
+from django.conf import settings  # Acesso as chaves
 
 
 def index(request):
@@ -61,10 +64,10 @@ def prestacao_contas(request):
 
 
 def lista_pets(request):
-    # Busca apenas quem NÃO foi adotado
-    # O 'prefetch_related' serve para carregar as fotos junto e não travar o site
-    pets = Pet.objects.filter(is_adotado=False).prefetch_related('fotos')
+    # ANTES: .filter(status='DISPONIVEL')
+    # AGORA: .filter(status_adocao='DISPONIVEL')
     
+    pets = Pet.objects.filter(status_adocao='DISPONIVEL').prefetch_related('fotos')
     return render(request, 'adote.html', {'pets': pets})
 
 
@@ -78,13 +81,28 @@ def detalhes_pet(request, pet_id):
 def cadastro_adotante(request, pet_id=None):
     pet_interesse = None
     
-    # Se veio com ID na URL, busca o pet para mostrar no formulário/email
     if pet_id:
         pet_interesse = get_object_or_404(Pet, id=pet_id)
 
     if request.method == 'POST':
         form = CadastroAdotanteForm(request.POST)
-        if form.is_valid():
+        
+        # === VALIDAÇÃO RECAPTCHA (INÍCIO) ===
+        recaptcha_response = request.POST.get('g-recaptcha-response')
+        
+        data = {
+            'secret': settings.RECAPTCHA_PRIVATE_KEY,
+            'response': recaptcha_response
+        }
+        
+        # Envia verificação para o servidor do Google
+        r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+        result = r.json()
+        # === VALIDAÇÃO RECAPTCHA (FIM) ===
+
+        # Agora verificamos: O formulário é válido E o captcha passou?
+        if form.is_valid() and result['success']:
+            
             # 1. Salva no Banco de Dados
             adotante = form.save()
             
@@ -103,11 +121,9 @@ def cadastro_adotante(request, pet_id=None):
             CPF: {adotante.cpf}
             """
             
-            # Se tiver pet selecionado, adiciona no e-mail
             if pet_interesse:
                 mensagem += f"\n\n--- INTERESSE NO PET ---\nNome: {pet_interesse.nome} (ID: {pet_interesse.id})"
             
-            # 3. Dispara o E-mail (vai aparecer no seu terminal)
             send_mail(
                 subject=assunto,
                 message=mensagem,
@@ -116,20 +132,31 @@ def cadastro_adotante(request, pet_id=None):
                 fail_silently=False,
             )
 
-            # 4. Manda para a tela de sucesso
-            return render(request, 'cadastro_sucesso.html') 
+            return render(request, 'cadastro_sucesso.html')
+        
+        else:
+            # Se cair aqui, ou o form está errado ou é robô
+            if not result['success']:
+                messages.error(request, 'Erro no reCAPTCHA. Por favor, confirme que você não é um robô.')
     else:
         form = CadastroAdotanteForm()
 
     return render(request, 'cadastro_adotante.html', {
         'form': form,
-        'pet': pet_interesse 
+        'pet': pet_interesse,
+        'recaptcha_site_key': settings.RECAPTCHA_PUBLIC_KEY # <--- Passamos a chave pública pro HTML
     })
 
 
 def index(request):
-    # Busca 3 pets disponíveis para mostrar na capa
-    # Se quiser aleatório, pode usar .order_by('?')[:3]
-    pets_destaque = Pet.objects.filter(is_adotado=False).order_by('-id')[:3]
+    # Busca pets destaque e disponíveis
+    pets_destaque = Pet.objects.filter(
+        is_destaque=True, 
+        status_adocao='DISPONIVEL'
+    ).order_by('-id')[:4] # <--- MUDAMOS PARA 4 (Limite máximo visual)
     
+    # Fallback (Se não tiver destaque, pega os 4 últimos)
+    if not pets_destaque:
+        pets_destaque = Pet.objects.filter(status_adocao='DISPONIVEL').order_by('-id')[:4]
+
     return render(request, 'index.html', {'pets_destaque': pets_destaque})

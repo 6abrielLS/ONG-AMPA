@@ -1,5 +1,4 @@
 from django.contrib import admin
-# Importando TODOS os models que criamos
 from .models import (
     Pet, 
     FotoPet, 
@@ -17,16 +16,16 @@ class FotoPetInline(admin.TabularInline):
 
 class PetAdmin(admin.ModelAdmin):
   
-    list_display = ('nome', 'categoria_pet', 'sexo', 'porte', 'is_castrado', 'is_adotado')
+    list_display = ('nome', 'categoria_pet', 'sexo', 'porte', 'status_adocao', 'is_destaque')
     
     # Filtros na barra lateral direita
-    list_filter = ('categoria_pet', 'sexo', 'porte', 'is_adotado', 'is_castrado')
+    list_filter = ('status_adocao', 'is_destaque', 'categoria_pet', 'sexo')
     
     # Barra de pesquisa (Busca por nome ou descrição)
     search_fields = ('nome', 'descricao')
     
     # editar o status de adoção direto na lista 
-    list_editable = ('is_adotado',)
+    list_editable = ('status_adocao', 'is_destaque')
     
     inlines = [FotoPetInline]
     
@@ -47,13 +46,16 @@ class VoluntarioAdmin(admin.ModelAdmin):
 class AdocaoAdmin(admin.ModelAdmin):
     list_display = ('pet', 'adotante', 'voluntario', 'data')
     list_filter = ('data',)
-    
-    # O Django usa "__" para buscar dentro de outra tabela
-    # buscama pelo NOME do Pet e pelo NOME do Adotante
     search_fields = ('pet__nome', 'adotante__nome', 'adotante__cpf')
-    
-    # Mostra a data de cadastro automaticamente, mas como leitura
     readonly_fields = ('data',)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "pet":
+            # Mostra apenas pets DISPONÍVEIS na hora de criar nova adoção
+            # Isso pode esconder o pet se você estiver EDITANDO uma adoção antiga
+            kwargs["queryset"] = Pet.objects.filter(status_adocao='DISPONIVEL')
+            
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 class DocumentoAdmin(admin.ModelAdmin):

@@ -1,7 +1,8 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.utils import timezone  # Importação correta para datas no Django
-from .validators import validar_imagem 
+from .validators import validar_imagem, validar_pdf
+from django.core.exceptions import ValidationError
 
 # ==============================================================================
 # MODELO: PET
@@ -33,12 +34,24 @@ class Pet(models.Model):
         SIM = 'S', 'Sim'
         NAO = 'N', 'Não'
 
+    class StatusAdocao(models.TextChoices):
+        DISPONIVEL = 'DISPONIVEL', 'Disponível para Adoção'
+        EM_PROCESSO = 'EM_PROCESSO', 'Em Processo de Adoção'
+        ADOTADO = 'ADOTADO', 'Adotado'
+
     # Campos de Texto
     nome = models.CharField(
         max_length=50, # Aumentado para segurança
         blank=False,
         verbose_name="Nome do Pet"
         # Removemos o validador estrito para permitir nomes como "Bolinha 2"
+    )
+
+    raca = models.CharField(
+        max_length=50,
+        default="SRD", # Já vem preenchido como Vira-lata para facilitar
+        verbose_name="Raça",
+        help_text="Ex: Labrador, Siamês, ou mantenha 'SRD' para Vira-lata."
     )
     
     coloracao = models.CharField(
@@ -93,11 +106,19 @@ class Pet(models.Model):
         verbose_name="Tem condição especial?"
     )
 
+    is_destaque = models.BooleanField(
+        default=False,
+        verbose_name="Destaque na Home?",
+        help_text="Marque se quiser que este pet apareça na página inicial."
+    )
+
     # Controle
-    is_adotado = models.BooleanField(
-        default=False, 
-        verbose_name="Já foi adotado?",
-        db_index=True # Indexado pois é o filtro principal do site
+    status_adocao = models.CharField(
+        max_length=20,
+        choices=StatusAdocao.choices,
+        default=StatusAdocao.DISPONIVEL,
+        verbose_name="Status de Adoção",
+        db_index=True # Ajuda a filtrar rápido no banco
     )
 
     def __str__(self):
@@ -106,6 +127,23 @@ class Pet(models.Model):
     class Meta:
         verbose_name = "Pet"
         verbose_name_plural = "Pets (Animais)"
+
+    def clean(self):
+        # Se o voluntário está tentando marcar este pet como destaque
+        if self.is_destaque:
+            # Conta quantos JÁ existem como destaque (excluindo este próprio, se for uma edição)
+            qtd_destaques = Pet.objects.filter(is_destaque=True).exclude(id=self.id).count()
+            
+            # Se já tiver 4 ou mais, BLOQUEIA
+            if qtd_destaques >= 4:
+                raise ValidationError({
+                    'is_destaque': 'O limite é de 4 destaques na Home. Desmarque outro animal antes de marcar este.'
+                })
+
+    # Garante que a validação rode também no Admin
+    def save(self, *args, **kwargs):
+        self.full_clean() # Chama o clean() antes de salvar
+        super().save(*args, **kwargs)
 
 
 # ==============================================================================
@@ -204,19 +242,36 @@ class Voluntario(models.Model):
 class Adocao(models.Model):
     pet = models.ForeignKey(
         Pet,
-        on_delete=models.PROTECT, # PROTECT: Não deixa apagar o Pet se ele foi adotado (Segurança)
+        on_delete=models.PROTECT, 
         related_name="adocoes"
     )
 
+    #Muda o status do pet ao salvar a adoção
+    def clean(self):
+        if not self.pk and self.pet.status_adocao == Pet.StatusAdocao.ADOTADO:
+            raise ValidationError(f"Erro: O animal '{self.pet.nome}' já consta como ADOTADO no sistema.")
+        
+    def save(self, *args, **kwargs):
+        # Primeiro, executa a validação acima
+        self.full_clean()
+        
+        # Salva o registro de adoção
+        super().save(*args, **kwargs)
+        
+        # atualiza o Pet para ADOTADO
+        if self.pet.status_adocao != Pet.StatusAdocao.ADOTADO:
+            self.pet.status_adocao = Pet.StatusAdocao.ADOTADO
+            self.pet.save()
+
     adotante = models.ForeignKey(
         Adotante,
-        on_delete=models.PROTECT, # PROTECT: Não deixa apagar o Adotante se ele tem adoções
+        on_delete=models.PROTECT, 
         related_name="adocoes"
     )
 
     voluntario = models.ForeignKey(
         Voluntario,
-        on_delete=models.SET_NULL, # Se o voluntário sair da ONG, o histórico mantém o nome dele ou fica Null
+        on_delete=models.SET_NULL, 
         null=True,
         blank=True,
         related_name="adocoes",
@@ -250,8 +305,13 @@ class DocumentoTransparencia(models.Model):
     ]
     
     titulo = models.CharField(max_length=200, verbose_name="Título do Documento")
-    arquivo = models.FileField(upload_to='transparencia_pdfs/', verbose_name="Arquivo PDF")
-    
+    arquivo = models.FileField(
+        upload_to='transparencia_pdfs/', 
+        verbose_name="Arquivo PDF",
+        validators=[validar_pdf],
+        help_text="Apenas arquivos .pdf são permitidos"
+    )
+
     categoria = models.CharField(
         max_length=20, 
         choices=CATEGORIAS, 

@@ -1,63 +1,68 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/style-adote.css' %}" />
-{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/style-adote.css' %}" />
+{% endblock %} {% block content %}
 <main class="com-padding-topo">
-    
-    <section class="adote-header">
-        <div class="container">
-            <h1>Nossos Amigos</h1>
-            <p>Eles estão esperando por um lar cheio de amor. Adote!</p>
-        </div>
-    </section>
+  <section class="adote-header">
+    <div class="container">
+      <h1>Nossos Amigos</h1>
+      <p>Eles estão esperando por um lar cheio de amor. Adote!</p>
+    </div>
+  </section>
 
-    <section class="galeria-pets">
-        <div class="container">
-            
-            <div class="grid-pets">
-                {% for pet in pets %}
-                <div class="card-pet">
-                    <div class="pet-img-wrapper">
-                        {% with capa=pet.fotos.first %}
-                            {% if capa %}
-                                <img src="{{ capa.imagem.url }}" alt="Foto de {{ pet.nome }}">
-                            {% else %}
-                                <img src="{% static 'img/sem-foto.png' %}" alt="Sem foto" class="sem-foto">
-                            {% endif %}
-                        {% endwith %}
-                        
-                        <span class="badge-sexo {{ pet.sexo }}">
-                            {% if pet.sexo == 'M' %}♂{% else %}♀{% endif %}
-                        </span>
-                    </div>
+  <section class="galeria-pets">
+    <div class="container">
+      <div class="grid-pets">
+        {% for pet in pets %}
+        <div class="card-pet">
+          <div class="pet-img-wrapper">
+            {% with capa=pet.fotos.first %} {% if capa %}
+            <img src="{{ capa.imagem.url }}" alt="Foto de {{ pet.nome }}" />
+            {% else %}
+            <img
+              src="{% static 'img/sem-foto.png' %}"
+              alt="Sem foto"
+              class="sem-foto"
+            />
+            {% endif %} {% endwith %}
+          </div>
 
-                    <div class="pet-info">
-                        <h3>{{ pet.nome }}</h3>
-                        <p class="pet-desc-curta">
-                            {{ pet.get_idade_display }} • {{ pet.get_porte_display }}
-                        </p>
-                        
-                        <div class="pet-tags">
-                            <span>{{ pet.get_categoria_pet_display }}</span>
-                            {% if pet.is_castrado == 'C' %}
-                                <span class="tag-castrado">Castrado</span>
-                            {% endif %}
-                        </div>
-
-                        <a href="{% url 'detalhes_pet' pet.id %}" class="btn-detalhes">Conhecer História</a>
-                    </div>
-                </div>
-                {% empty %}
-                    <p class="vazio">Oba! No momento não temos nenhum animal aguardando adoção. 🎉</p>
-                {% endfor %}
+          <div class="pet-info">
+            <h3>{{ pet.nome }}</h3>
+            <div class="tags-row">
+                <span class="tag-pill outline"> {{ pet.get_sexo_display }} </span>
+                <span class="tag-pill outline"> {{ pet.get_porte_display }} </span>
+                <span class="tag-pill outline"> {{ pet.raca }} </span>
             </div>
 
-        </div>
-    </section>
+            {% if pet.is_castrado == 'C' %}
+            <div class="row-castrado">
+              <span class="tag-pill success">
+                <i class="fas fa-check"></i> Castrado
+              </span>
+            </div>
+            {% endif %} {% if pet.is_condicao_especial == 'S' %}
+            <div class="health-box">
+              <span class="health-label">Status de Saúde:</span>
+              <div class="health-tags">
+                <span class="tag-health warning">
+                  <i class="fas fa-notes-medical"></i> Requer Cuidados
+                </span>
+              </div>
+            </div>
+            {% endif %}
 
+        <a href="{% url 'detalhes_pet' pet.id %}" class="btn-detalhes">
+    Conhecer História <i class="fas fa-arrow-right"></i>
+</a>
+          </div>
+        </div>
+        {% empty %}
+        <p class="vazio">
+          Oba! No momento não temos nenhum animal aguardando adoção. 🎉
+        </p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
 </main>
 {% endblock %}

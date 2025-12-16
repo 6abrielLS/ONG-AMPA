@@ -17,3 +17,16 @@ def validar_imagem(foto):
 
     # 3. Sanitizar nome do arquivo
     foto.name = foto.name.replace(" ", "_")
+
+
+def validar_pdf(arquivo):
+    # 1. Valida a extensão
+    ext = os.path.splitext(arquivo.name)[1].lower()
+    
+    if ext != '.pdf':
+        raise ValidationError("Formato inválido. Envie apenas arquivos PDF.")
+
+    # Tamanho máximo
+    limit_mb = 3
+    if arquivo.size > limit_mb * 1024 * 1024:
+        raise ValidationError(f"O arquivo é muito grande. O limite é {limit_mb}MB.")
