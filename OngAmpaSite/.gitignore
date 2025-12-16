@@ -1,0 +1,17 @@
+# .gitignore
+
+# Arquivos de ambiente e senhas (O MAIS IMPORTANTE)
+.env
+.venv
+env/
+venv/
+
+# Banco de dados (não queremos subir o db local)
+*.sqlite3
+
+# Arquivos compilados do Python
+__pycache__/
+*.py[cod]
+
+# Arquivos de IDE
+.vscode/
