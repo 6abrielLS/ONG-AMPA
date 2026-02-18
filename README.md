@@ -7,15 +7,15 @@
 
 ### Vitrine de Adoção (Front-end)
 Interface limpa e amigável para destacar os animais disponíveis.
-![Home Desktop](screenshots/home.png)
+![Home Desktop](OngAmpaSite/screenshots/home.png)
 
 ### Mobile First & Responsividade
 Foco total na experiência mobile, onde ocorre a maioria dos acessos. Adaptação de grids complexos para navegação fluida em telas pequenas.
-![Mobile View](screenshots/mobile.png)
+![Mobile View](OngAmpaSite/screenshots/mobile.png)
 
 ### Painel Administrativo (Back-end)
 Dashboard customizado para que voluntários gerenciem cadastros de animais, adotantes e status de adoção sem precisar tocar em código.
-![Dashboard Admin](screenshots/admin.png)
+![Dashboard Admin](OngAmpaSite/screenshots/admin.png)
 
 ---
 
