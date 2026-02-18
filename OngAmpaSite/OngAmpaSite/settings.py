@@ -9,9 +9,12 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-from dotenv import load_dotenv
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,13 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'chave-padrao-insegura-apenas-para-teste')
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
-
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']  #ALLOWED_HOSTS = ['ongampa.com.br', 'www.ongampa.com.br', 'localhost', '127.0.0.1']
 
-load_dotenv()
+
 
 # Application definition
 
@@ -115,22 +115,31 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# URL para acessar os arquivos no navegador
-MEDIA_URL = '/media/'
-
-
-# Media files (Uploads) - Mantenha APENAS esta definição
+# Media files (Uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Configuração de E-mail (Desenvolvimento)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'site@ongampa.com.br'
+
+# ==========================================
+# CONFIGURAÇÃO DE ENVIO DE E-MAIL (SMTP)
+# ==========================================
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+# Pega o login e a senha do bot, no  arquivo .env
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+# Define que o remetente padrão é o próprio bot
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Define quem recebe 
+EMAIL_ONG_RECEBIMENTO = os.getenv('EMAIL_ONG_RECEBIMENTO', 'ampa.mirassol@hotmail.com')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -139,8 +148,8 @@ DEFAULT_FROM_EMAIL = 'site@ongampa.com.br'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configurações do reCAPTCHA
-RECAPTCHA_PUBLIC_KEY = '6LeasywsAAAAANHoc9ej-ZQLYO3W5kp9HVd7OvFq'
-RECAPTCHA_PRIVATE_KEY = '6LeasywsAAAAAD0ptA3__1KxngfcG9bzCcWURf8O'
+RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')
 
 # ==================================
 # CONFIGURAÇÕES DO JAZZMIN (ADMIN)

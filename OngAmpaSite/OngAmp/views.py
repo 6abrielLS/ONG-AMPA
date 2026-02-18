@@ -3,14 +3,10 @@ from .models import DocumentoTransparencia
 from .models import Pet
 from .forms import CadastroAdotanteForm
 from django.core.mail import send_mail
-from django.conf import settings
 import requests # Comunicação com o Google
 from django.contrib import messages # Manda mensagem de erro na tela
 from django.conf import settings  # Acesso as chaves
-
-
-def index(request):
-    return render(request, 'index.html')
+from .models import ConfiguracaoGeral
 
 
 def sobre(request):
@@ -87,7 +83,7 @@ def cadastro_adotante(request, pet_id=None):
     if request.method == 'POST':
         form = CadastroAdotanteForm(request.POST)
         
-        # === VALIDAÇÃO RECAPTCHA (INÍCIO) ===
+        # === VALIDAÇÃO RECAPTCHA ===
         recaptcha_response = request.POST.get('g-recaptcha-response')
         
         data = {
@@ -98,15 +94,13 @@ def cadastro_adotante(request, pet_id=None):
         # Envia verificação para o servidor do Google
         r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
         result = r.json()
-        # === VALIDAÇÃO RECAPTCHA (FIM) ===
-
-        # Agora verificamos: O formulário é válido E o captcha passou?
+    
         if form.is_valid() and result['success']:
             
             # 1. Salva no Banco de Dados
             adotante = form.save()
             
-            # 2. Monta o E-mail de Alerta
+          # 2. Monta o E-mail de Alerta
             assunto = f'Novo Interessado: {adotante.nome}'
             mensagem = f"""
             Olá equipe AMPA,
@@ -124,18 +118,30 @@ def cadastro_adotante(request, pet_id=None):
             if pet_interesse:
                 mensagem += f"\n\n--- INTERESSE NO PET ---\nNome: {pet_interesse.nome} (ID: {pet_interesse.id})"
             
+            # === [INÍCIO DA ALTERAÇÃO] ===
+            # Tenta buscar a configuração personalizada no banco de dados
+            config = ConfiguracaoGeral.objects.first()
+            
+            if config:
+                # Se a ONG configurou no admin, usa o e-mail dela
+                email_destino = config.email_recebimento
+            else:
+                # Se não configurou, usa o padrão do arquivo .env (segurança)
+                email_destino = settings.EMAIL_ONG_RECEBIMENTO
+            # === [FIM DA ALTERAÇÃO] ===
+
             send_mail(
                 subject=assunto,
                 message=mensagem,
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=['ampa.mirassol@hotmail.com'], 
+                recipient_list=[email_destino], # <--- AQUI MUDOU para usar a variável
                 fail_silently=False,
             )
 
             return render(request, 'cadastro_sucesso.html')
         
         else:
-            # Se cair aqui, ou o form está errado ou é robô
+            # Se cair aqui, ou o form está errado ou é bot
             if not result['success']:
                 messages.error(request, 'Erro no reCAPTCHA. Por favor, confirme que você não é um robô.')
     else:
@@ -144,7 +150,7 @@ def cadastro_adotante(request, pet_id=None):
     return render(request, 'cadastro_adotante.html', {
         'form': form,
         'pet': pet_interesse,
-        'recaptcha_site_key': settings.RECAPTCHA_PUBLIC_KEY # <--- Passamos a chave pública pro HTML
+        'recaptcha_site_key': settings.RECAPTCHA_PUBLIC_KEY   #Passa a chave pública pro HTML
     })
 
 
@@ -153,10 +159,10 @@ def index(request):
     pets_destaque = Pet.objects.filter(
         is_destaque=True, 
         status_adocao='DISPONIVEL'
-    ).order_by('-id')[:4] # <--- MUDAMOS PARA 4 (Limite máximo visual)
+    ).order_by('-id')[:3] #Limite máximo visual
     
     # Fallback (Se não tiver destaque, pega os 4 últimos)
     if not pets_destaque:
-        pets_destaque = Pet.objects.filter(status_adocao='DISPONIVEL').order_by('-id')[:4]
+        pets_destaque = Pet.objects.filter(status_adocao='DISPONIVEL').order_by('-id')[:3]
 
     return render(request, 'index.html', {'pets_destaque': pets_destaque})

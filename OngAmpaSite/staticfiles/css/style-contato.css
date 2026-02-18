@@ -1,0 +1,161 @@
+/* ===== HEADER ===== */
+.contato-header {
+    background-color: #f4f8fb;
+    padding: 3rem 0;
+    text-align: center;
+    border-bottom: 4px solid var(--accent);
+}
+
+.contato-header h1 {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.contato-header p {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+/* ===== SEÇÃO DESTAQUE (INSTAGRAM) ===== */
+.contato-destaque {
+    padding: 4rem 0;
+    background-color: #fff;
+}
+
+.card-atendimento {
+    background: #fff;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid #eee;
+}
+
+.icone-atendimento img {
+    width: 4rem; /* 64px */
+    height: 4rem;
+    margin-bottom: 1.5rem;
+}
+
+.card-atendimento h2 {
+    color: var(--text);
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+.card-atendimento p {
+    color: #555;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.btn-instagram {
+    display: inline-block;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); 
+    /* Degradê oficial do Instagram */
+    color: white;
+    font-weight: 700;
+    padding: 1rem 2rem;
+    border-radius: 2rem; /* Botão bem redondo */
+    text-decoration: none;
+    font-size: 1.125rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(220, 39, 67, 0.3);
+}
+
+.btn-instagram:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(220, 39, 67, 0.5);
+    color: white;
+}
+
+.horario-obs {
+    margin-top: 1rem !important;
+    margin-bottom: 0 !important;
+    font-size: 0.875rem;
+    color: #999 !important;
+}
+
+/* ===== SEÇÃO LOCALIZAÇÃO (MAPA) ===== */
+.contato-localizacao {
+    padding: 4rem 0;
+    background-color: #f9f9f9;
+}
+
+.grid-mapa {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr; /* Texto menor, Mapa maior */
+    gap: 3rem;
+    align-items: center;
+}
+
+.texto-mapa h2 {
+    color: var(--primary);
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.lista-endereco {
+    list-style: none;
+    margin: 2rem 0;
+}
+
+.lista-endereco li {
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    color: #444;
+    line-height: 1.6;
+    background: #fff;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--accent);
+}
+
+.aviso-visita {
+    background-color: #fff3cd; /* Amarelo clarinho de alerta */
+    color: #856404;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #ffeeba;
+    font-size: 0.9rem;
+}
+
+/* Estilo da Imagem do Mapa */
+.imagem-mapa {
+    position: relative;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    background: #fff;
+    padding: 0.5rem;
+}
+
+.imagem-mapa img {
+    width: 650px;
+    height: 650px;
+    border-radius: 0.5rem;
+    display: block;
+}
+
+.legenda-mapa {
+    display: block;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #777;
+    margin-top: 0.5rem;
+    font-style: italic;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 900px) {
+    .grid-mapa {
+        grid-template-columns: 1fr; /* Coluna única no mobile */
+    }
+    
+    .imagem-mapa {
+        order: -1; /* Joga o mapa para cima do texto no mobile */
+    }
+}

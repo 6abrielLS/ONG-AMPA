@@ -1,4 +1,8 @@
-{% extends 'base.html' %} {% load static %} {% block extra_css %}
+{% extends 'base.html' %} 
+{% block title %}Nossos Pets | ONG AMPA{% endblock %}
+{% load static %} 
+
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/style-adote.css' %}" />
 {% endblock %} {% block content %}
 <main class="com-padding-topo">
@@ -28,6 +32,9 @@
 
           <div class="pet-info">
             <h3>{{ pet.nome }}</h3>
+            <span class="badge-idade">
+            {{ pet.get_idade_display }}
+        </span>
             <div class="tags-row">
                 <span class="tag-pill outline"> {{ pet.get_sexo_display }} </span>
                 <span class="tag-pill outline"> {{ pet.get_porte_display }} </span>

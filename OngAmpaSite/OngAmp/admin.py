@@ -34,8 +34,25 @@ class PetAdmin(admin.ModelAdmin):
 
 
 class AdotanteAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'cpf')
-    search_fields = ('nome', 'cpf')
+    list_display = ('nome', 'telefone', 'email', 'data_cadastro')
+    search_fields = ('nome', 'cpf', 'email') #Campo de busca
+    list_filter = ('data_cadastro',) #Filtro por data de cadastro
+    readonly_fields = ('data_cadastro',) # Garante que ninguém altere a data de cadastro manualmente
+
+    # Organiza os dados sensíveis dentro do formulário de detalhe
+    fieldsets = (
+        ('Identificação', {
+            'fields': ('nome', 'cpf')
+        }),
+        ('Contato', {
+            'fields': ('telefone', 'email', 'endereco')
+        }),
+        ('Sistema', {
+            'fields': ('data_cadastro',),
+            'classes': ('collapse',) # Esconde visualmente para não poluir
+        }),
+    )
+
 
 
 class VoluntarioAdmin(admin.ModelAdmin):
@@ -48,14 +65,6 @@ class AdocaoAdmin(admin.ModelAdmin):
     list_filter = ('data',)
     search_fields = ('pet__nome', 'adotante__nome', 'adotante__cpf')
     readonly_fields = ('data',)
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "pet":
-            # Mostra apenas pets DISPONÍVEIS na hora de criar nova adoção
-            # Isso pode esconder o pet se você estiver EDITANDO uma adoção antiga
-            kwargs["queryset"] = Pet.objects.filter(status_adocao='DISPONIVEL')
-            
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 class DocumentoAdmin(admin.ModelAdmin):
@@ -74,8 +83,22 @@ class DocumentoAdmin(admin.ModelAdmin):
         }),
     )
 
+from .models import ConfiguracaoGeral # <--- Importe o novo modelo
+
+# Crie a classe de administração
+class ConfiguracaoAdmin(admin.ModelAdmin):
+    list_display = ('email_recebimento',)
+    
+    # Remove o botão "Adicionar" se já existir 1 configuração
+    def has_add_permission(self, request):
+        if ConfiguracaoGeral.objects.exists():
+            return False
+        return True
+
+
+
+admin.site.register(ConfiguracaoGeral, ConfiguracaoAdmin)
 admin.site.register(Pet, PetAdmin)
-# admin.site.register(FotoPet) # Não precisa registrar separado, já está dentro de Pet
 admin.site.register(Adotante, AdotanteAdmin)
 admin.site.register(Voluntario, VoluntarioAdmin)
 admin.site.register(Adocao, AdocaoAdmin)

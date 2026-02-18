@@ -1,4 +1,6 @@
-{% extends 'base.html' %} {% load static %} {% block extra_css %}
+{% extends 'base.html' %} 
+{% block title %}Perfil Pet | ONG AMPA{% endblock %}
+{% load static %} {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/style-adote.css' %}" />
 {% endblock %} {% block content %}
 <main class="com-padding-topo">
@@ -76,8 +78,9 @@
             </a>
              <p style="margin: 1rem 0; font-weight: bold; color: #ccc;">OU</p>
     
-                <a href="..." class="btn-instagram-grande">Falar no Instagram</a>
-                    </div>
+                <a href="https://www.instagram.com/ampa.mirassol/" target="_blank" class="btn-instagram-grande">
+    <i class="fab fa-instagram"></i> Falar no Instagram
+</a>
           <div class="aviso-visita">
             ⚠️ <strong>Importante:</strong> Visitas ao abrigo somente com
             horário marcado.
@@ -87,69 +90,8 @@
     </div>
   </div>
 </main>
-{% endblock %} {% block scripts %}
-<script>
-  // Variável para saber qual foto estamos vendo agora (0, 1, 2...)
-  let indiceAtual = 0;
+{% endblock %} 
 
-  // Pega todas as miniaturas assim que a página carrega
-  const miniaturas = document.querySelectorAll(".miniatura");
-  const destaque = document.getElementById("imgDestaque");
-
-  // Função para clicar na miniatura
-  function trocarFoto(elemento, novoIndice) {
-    // Atualiza a imagem grande com a fonte da miniatura clicada
-    destaque.src = elemento.src;
-
-    // Atualiza o índice global
-    indiceAtual = novoIndice;
-
-    // Atualiza o visual (borda azul)
-    atualizarClasseAtiva();
-  }
-
-  // Função das Setas (Próximo / Anterior)
-  function mudarSlide(direcao) {
-    // Se não tiver miniaturas, não faz nada
-    if (miniaturas.length === 0) return;
-
-    // Calcula o novo índice
-    indiceAtual += direcao;
-
-    // Lógica do Loop Infinito:
-    // Se passou da última, volta para a primeira (0)
-    if (indiceAtual >= miniaturas.length) {
-      indiceAtual = 0;
-    }
-    // Se voltou antes da primeira, vai para a última
-    if (indiceAtual < 0) {
-      indiceAtual = miniaturas.length - 1;
-    }
-
-    // Pega a nova miniatura baseada no índice calculado
-    const novaMiniatura = miniaturas[indiceAtual];
-
-    // Atualiza a foto grande
-    destaque.src = novaMiniatura.src;
-
-    // Atualiza a borda
-    atualizarClasseAtiva();
-  }
-
-  // Função auxiliar para pintar a borda da miniatura certa
-  function atualizarClasseAtiva() {
-    // Remove a classe 'ativa' de todas
-    miniaturas.forEach((min) => min.classList.remove("ativa"));
-
-    // Adiciona na atual
-    miniaturas[indiceAtual].classList.add("ativa");
-
-    // (Opcional) Faz a barra de rolagem das miniaturas seguir a seleção
-    miniaturas[indiceAtual].scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "center",
-    });
-  }
-</script>
+{% block scripts %}
+<script src="{% static 'js/detalhes_pet.js' %}"></script>
 {% endblock %}

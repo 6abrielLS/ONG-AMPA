@@ -1,0 +1,153 @@
+/* ===== CABEÇALHO DA PÁGINA ===== */
+.sobre-header {
+    background-color: #f4f8fb; /* Um cinza/azul bem clarinho para diferenciar */
+    padding: 3rem 0;
+    text-align: center;
+    border-bottom: 4px solid var(--accent); /* O azul claro do seu site */
+}
+
+.sobre-header h1 {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.sobre-header p {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+/* ===== SEÇÃO HISTÓRIA ===== */
+.sobre-historia {
+    padding: 4rem 0;
+    background-color: #fff;
+}
+
+.historia-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Divide em 2 colunas */
+    gap: 3rem;
+    align-items: center;
+}
+
+.historia-texto h2 {
+    font-size: 2rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+/* Detalhe visual embaixo do título */
+.historia-texto h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background-color: var(--accent);
+    margin-top: 0.5rem;
+    border-radius: 2px;
+}
+
+.historia-texto p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    color: #444;
+    font-size: 1rem;
+}
+
+.historia-imagem img {
+    width: 100%;
+    border-radius: 1rem;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    object-fit: cover;
+    height: 100%;
+    min-height: 300px;
+}
+
+/* ===== SEÇÃO PILARES (CARDS) ===== */
+.sobre-pilares {
+    padding: 4rem 0;
+    background-color: #f9f9f9;
+}
+
+.pilares-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.pilar-card {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+    border-top: 5px solid var(--primary); /* Charme visual no topo do card */
+}
+
+.pilar-card:hover {
+    transform: translateY(-5px);
+}
+
+.pilar-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.pilar-card h3 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.pilar-card p {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* ===== NÚMEROS DE IMPACTO ===== */
+.sobre-numeros {
+    background-color: var(--primary); /* Fundo Azul Escuro */
+    padding: 3rem 0;
+    color: #fff;
+}
+
+.numeros-grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 2rem;
+    text-align: center;
+}
+
+.grande-numero {
+    display: block;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--accent); /* Azul Claro para destacar */
+}
+
+.numero-item p {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 900px) {
+    .historia-grid {
+        grid-template-columns: 1fr; /* Vira coluna única no mobile */
+        text-align: center;
+    }
+    
+    .historia-texto h2::after {
+        margin: 0.5rem auto; /* Centraliza o sublinhado */
+    }
+
+    .grande-numero {
+        font-size: 2.5rem;
+    }
+}

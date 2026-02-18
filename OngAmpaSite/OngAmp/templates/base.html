@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ONG AMPA</title>
+    <title>{% block title %}ONG AMPA{% endblock %}</title>
     <link rel="icon" href="{% static 'img/LogoAmpa-new.png' %}" type="image/jpeg" />
     <link rel="stylesheet" href="{% static 'css/style-base.css' %}" />
     {% block extra_css %}{% endblock %}
@@ -63,7 +63,7 @@
                     <a href="https://www.instagram.com/ampa.mirassol/" target="_blank"><img src="{% static 'img/instagram.svg' %}" alt="Instagram" /></a>
                 </div>
                 <ul>
-                    <li><a href="#"><img src="{% static 'img/email.svg' %}" /><span>ampa.mirassol@hotmail.com</span></a></li>
+                    <li><a href="mailto:ampa.mirassol@hotmail.com"><img src="{% static 'img/email.svg' %}" /><span>ampa.mirassol@hotmail.com</span></a></li>
                     <li><a href="#"><img src="{% static 'img/location.svg' %}" /><span>Mirassol - SP</span></a></li>
                 </ul>
             </address>

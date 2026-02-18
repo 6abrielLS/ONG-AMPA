@@ -1,0 +1,28 @@
+/* 1. Alvo na imagem direta dentro do formulário de login */
+#login-box .card-body .login-logo img,
+.login-box .login-logo img,
+.login-page .login-logo img {
+    max-width: 150px !important;
+    width: 150px !important; /* Força bruta na largura */
+    height: auto !important;
+    margin: 0 auto 20px auto !important;
+    display: block !important;
+}
+
+/* 2. Alvo genérico para qualquer imagem dentro do cabeçalho do card de login */
+.card-header.text-center img {
+    max-width: 150px !important;
+    height: auto !important;
+}
+
+/* 3. Caso a logo esteja sendo usada como background (raro, mas acontece) */
+.login-logo a {
+    background-size: contain !important;
+    width: 150px !important;
+}
+
+/* 4. ESCONDER O TEXTO DUPLICADO */
+/* Às vezes o Jazzmin mostra a imagem E o texto "Bem-vindo...". Isso esconde o texto redundante se estiver colado na logo */
+.login-logo b {
+    display: none;
+}

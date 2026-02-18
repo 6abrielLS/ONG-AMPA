@@ -1,0 +1,264 @@
+/* =========================================
+   1. HERO BANNER (CAPA)
+   ========================================= */
+.container-banner {
+  padding-bottom: 4rem;
+}
+.hero-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.section-incentivo {
+  background-color: #ffffff;
+  
+  padding-bottom: 4rem;
+}
+
+.text-incentivo {
+  max-width: 708px;
+  margin: 0 auto; /* Centraliza a div na tela */
+  padding: 0 1rem; /* Margem de segurança para celulares */
+}
+.text-blue{
+    background-color: #2daae4; 
+    color: #fff; 
+    padding: 0 0.5rem; 
+    display: inline-block; 
+    transform: rotate(-2deg); 
+}
+
+.text-incentivo h2 {
+  font-size: 36px;
+  font-weight: 800;
+  color: #000; 
+  margin-bottom: 1rem;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.text-incentivo p {
+  font-size: 1.15rem;
+  color: #555;
+  margin: 0 auto;
+  line-height: 1.6;
+  max-width: 708px;  
+  text-align: left;
+}
+
+/* =========================================
+   2. COMO ADOTAR (PROCESSO)
+   ========================================= */
+.section-processo-adocao {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+  background: linear-gradient(to right, #ffffff -15%, #2daae4 50%, #ffffff 115%);
+}
+.text-adopt-process {
+  text-align: center;
+  color: #000;
+  margin-bottom: 4rem;
+}
+.text-adopt-process h2 {
+  font-size: 36px;
+}
+.text-adopt-process p {
+  font-size: 18px;
+}
+/* Grid de Cards Brancos */
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  align-items: center;
+}
+
+.card-white {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--text);
+}
+.card-icon {
+  font-size: 3rem;
+  margin-bottom: 5px;
+  display: block;
+}
+.icon{
+     width: 48px;
+  height: 48px;
+}
+
+.card-white h3 {
+  color: #000;
+  font-size: 1.25rem;
+  margin-bottom: 0.8rem;
+  font-weight: 700;
+}
+
+.card-white p {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* =========================================
+   3. DESTAQUES
+   ========================================= */
+.section-destaques {
+  padding: 5rem 0;
+  background-color: #fff;
+}
+
+.section-header-dark {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-header-dark h2 {
+  color: #000;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.section-header-dark p {
+  color: #666;
+  font-size: 18px;
+}
+
+.btn-center-wrapper {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.btn-outline-primary {
+  display: inline-block;
+  padding: 0.8rem 2.5rem;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary);
+  color: #fff;
+}
+
+/* =========================================
+   4. COMO AJUDAR
+   ========================================= */
+.section-ajuda {
+  padding: 5rem 0;
+  background-color: #f8f9fa;
+}
+
+.grid-cards-ajuda {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.card-minimal {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 480px;
+  transition: border-color 0.2s;
+}
+
+.card-minimal:hover {
+  border-color: var(--primary);
+}
+
+.icon-minimal {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.content-minimal h3 {
+  color: var(--text);
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.content-minimal p {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.pix-box {
+  background: #eef2f7;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: 1px dashed #ccc;
+  display: inline-block;
+}
+
+.pix-box small {
+  display: block;
+  color: #777;
+  font-size: 0.75rem;
+}
+
+.pix-box strong {
+  color: var(--primary);
+  font-family: monospace;
+  font-size: 1rem;
+}
+
+.link-arrow {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.link-arrow:hover {
+  text-decoration: underline;
+}
+
+/* =========================================
+   RESPONSIVIDADE
+   ========================================= */
+@media (max-width: 768px) {
+  .card-minimal {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+
+  .hero-container {
+    height: 250px;
+  }
+
+  .section-processo {
+    background: linear-gradient(
+      180deg,
+      var(--primary) 0%,
+      var(--primary) 20%,
+      #ffffff 20%,
+      #ffffff 100%
+    );
+  }
+
+  .section-header-white h2 {
+    font-size: 1.8rem;
+  }
+}

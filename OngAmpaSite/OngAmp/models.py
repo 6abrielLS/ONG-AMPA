@@ -3,6 +3,8 @@ from django.core.validators import RegexValidator
 from django.utils import timezone  # Importação correta para datas no Django
 from .validators import validar_imagem, validar_pdf
 from django.core.exceptions import ValidationError
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
 # ==============================================================================
 # MODELO: PET
@@ -291,6 +293,28 @@ class Adocao(models.Model):
         verbose_name_plural = "Registro de Adoções"
 
 
+class ConfiguracaoGeral(models.Model):
+    email_recebimento = models.EmailField(
+        verbose_name="E-mail que recebe as adoções",
+        help_text="Para onde devem ir os alertas de novos interessados?",
+        default="ampa.mirassol@hotmail.com"
+    )
+
+    def __str__(self):
+        return "Configuração de E-mail"
+
+    class Meta:
+        verbose_name = "Configuração do Site"
+        verbose_name_plural = "Configurações do Site"
+
+    # Truque para garantir que só exista 1 configuração no banco
+    def save(self, *args, **kwargs):
+        if not self.pk and ConfiguracaoGeral.objects.exists():
+            # Se tentar criar uma segunda, a gente bloqueia ou atualiza a primeira
+             raise ValidationError('Só pode existir uma configuração geral no site.')
+        return super(ConfiguracaoGeral, self).save(*args, **kwargs)
+    
+
 # ==============================================================================
 # MODELO: TRANSPARÊNCIA
 # ==============================================================================
@@ -331,3 +355,14 @@ class DocumentoTransparencia(models.Model):
         verbose_name = "Documento de Transparência"
         verbose_name_plural = "Transparência"
         ordering = ['-data_publicacao']
+
+# ==============================================================================
+# SINAIS (GATILHOS AUTOMÁTICOS)
+# ==============================================================================
+@receiver(post_delete, sender=Adocao)
+def reverter_status_pet_ao_excluir_adocao(sender, instance, **kwargs):
+    pet = instance.pet
+    # Se o pet estava ADOTADO e a adoção foi excluída, volta pra DISPONIVEL
+    if pet.status_adocao == Pet.StatusAdocao.ADOTADO:
+        pet.status_adocao = Pet.StatusAdocao.DISPONIVEL
+        pet.save()
